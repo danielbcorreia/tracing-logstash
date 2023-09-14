@@ -258,6 +258,31 @@ where
             }
         }
 
+        #[cfg(feature = "opentelemetry")]
+        {
+            use crate::opentelemetry::trace_info_from_ref;
+            use opentelemetry::trace::TraceContextExt;
+            use tracing_opentelemetry::OtelData;
+
+            if let Some(span_ref) = ctx.lookup_current() {
+                let trace_info = span_ref.extensions().get::<OtelData>().and_then(|o| {
+                    trace_info_from_ref(TraceContextExt::span(&o.parent_cx)).map(|mut info| {
+                        // if the SpanBuilder contains a valid span_id we use its span_id instead
+                        // of the extracted one, because it refers to the more accurate span.
+                        if let Some(span_id) = o.builder.span_id {
+                            info.span_id = span_id.to_string();
+                        }
+                        info
+                    })
+                });
+
+                if let Some(trace_info) = trace_info {
+                    field_visitor.serialize_field("span_id", &trace_info.span_id);
+                    field_visitor.serialize_field("trace_id", &trace_info.trace_id);
+                }
+            }
+        }
+
         if let Some(filter) = self.display_span_list {
             field_visitor.serialize_field(
                 "spans",
@@ -277,6 +302,7 @@ where
                 }
             }
         }
+
         s.end()
     }
 }

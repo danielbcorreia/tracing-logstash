@@ -4,6 +4,9 @@ pub mod format;
 pub mod logstash;
 mod span_recorder;
 
+#[cfg(feature = "opentelemetry")]
+mod opentelemetry;
+
 use crate::logstash::LogstashFormat;
 use span_recorder::SpanRecorder;
 use std::io::Write;

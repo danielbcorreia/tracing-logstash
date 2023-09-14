@@ -73,6 +73,7 @@ impl FormatSpan for DefaultSpanFormat {
                 write_extension_fields(&mut HashSet::from(RESERVED_SPAN_FIELDS), &mut s, fields)?;
             }
         }
+
         s.end()
     }
 }
