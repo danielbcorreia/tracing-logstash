@@ -1,4 +1,4 @@
-name: Release
+name: release
 
 on:
   push:
@@ -11,8 +11,6 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
-    environment: release
-
     steps:
     - uses: actions/checkout@v3
     - uses: taiki-e/create-gh-release-action@v1
