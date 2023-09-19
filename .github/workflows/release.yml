@@ -18,4 +18,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: dtolnay/rust-toolchain@stable
     - name: Publish
-      run: cargo publish
+      run: cargo publish -p tracing-logstash
